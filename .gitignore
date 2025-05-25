@@ -1,0 +1,13 @@
+
+*.pyc
+__pycache__/
+db.sqlite3
+*.log
+/media
+/static
+venv/
+.venv/
+*.swp
+local_settings.py
+settings.py
+*.sqlite3
