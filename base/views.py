@@ -62,21 +62,26 @@ def home(request):
                                 Q(description__icontains=q)) 
     topics = Topic.objects.all()
     room_count = rooms.count()
-    context = {'title':'FunChat', 'rooms':rooms, 'topics':topics, 'room_count':room_count}
+    recent_messages = Message.objects.order_by('-created')
+    context = {'title':'FunChat', 'rooms':rooms, 'topics':topics, 'room_count':room_count, 'recent_messages':recent_messages}
     return render(request, 'base/home.html', context)
 
 
 def room(request, pk):
     room = Room.objects.get(id=pk)
     room_messages = room.message_set.all().order_by('-created')
+    participants = room.participants.all()
     if request.method == 'POST':
         message = Message.objects.create(
             user = request.user,
             room = room,
             body = request.POST.get('body')
         )
+        room.participants.add(request.user)
         return redirect('room', pk=room.id)
-    context = {'title':'Room', 'room':room, 'room_messages':room_messages}
+        
+    
+    context = {'title':'Room', 'room':room, 'room_messages':room_messages, 'participants':participants}
     
     return render(request, 'base/room.html', context)
 
@@ -122,3 +127,18 @@ def deleteRoom(request, pk):
     context = {'title':'Delete Room', 'obj':room}
     return render(request, 'base/delete.html', context)
 
+@login_required(login_url='login')
+def deleteMessage(request, pk):
+    message = Message.objects.get(id=pk)
+   
+    if request.method=='POST':
+        message.delete()
+        return redirect('room', message.room.id )
+
+    context = {'title':'Delete Message', 'obj':message}
+    return render(request, 'base/delete.html', context)
+
+
+@login_required(login_url='login')
+def editMessage(request, pk):
+    message = Message.objects.get(id=pk)
