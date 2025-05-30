@@ -283,8 +283,8 @@ a {
 }
 
 .header__logo > img {
-  height: 3.2rem;
-  width: 3.2rem;
+  height: 50px;
+  width: 50px;
 }
 
 .header__logo > h1 {
@@ -1162,4 +1162,13 @@ a {
   font-weight: 500;
   color: var(--color-main);
   font-weight: 1.4rem;
+}
+
+.error {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  object-position: center;
+  margin: 100px auto auto auto;
+  width: 45%;
 }

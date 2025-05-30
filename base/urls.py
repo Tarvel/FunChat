@@ -10,9 +10,9 @@ urlpatterns = [
     path('logout/', views.logoutPage, name='logout'),
     path('register/', views.registerUser, name='register'),
 
-    path('create-room/', views.createRoom, name='create-room'),
-    path('update-room/<str:pk>', views.updateRoom, name='update-room'),
-    path('delete-room/<str:pk>', views.deleteRoom, name='delete-room'),
-    path('delete-message/<str:pk>', views.deleteMessage, name='delete-message'),
-    path('edit-message/<str:pk>', views.editMessage, name='edit-message'),
+    path('create_room/', views.createRoom, name='create-room'),
+    path('update_room/<str:pk>', views.updateRoom, name='update-room'),
+    path('delete_room/<str:pk>', views.deleteRoom, name='delete-room'),
+    path('delete_message/<str:pk>', views.deleteMessage, name='delete-message'),
+    path('update_profile/', views.updateUser, name='update-profile'),
 ]
