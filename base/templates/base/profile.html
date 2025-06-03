@@ -18,7 +18,11 @@
         <div class="profile">
           <div class="profile__avatar">
             <div class="avatar avatar--large active">
-              <img src="{% static 'images/avatar.svg' %}" />
+  {% if profile.profile_picture %}
+      <img src="{{ profile.profile_picture.url }}" alt="Profile Picture">
+  {% else %}
+      <img src="{% static 'images/default.svg' %}" alt="default image">
+  {% endif %}
             </div>
           </div>
           <div class="profile__info">
@@ -31,11 +35,9 @@
 
           </div>
           <div class="profile__about">
-            <h3>About</h3>
+            <h3>Bio</h3>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur illo tenetur
-              facilis sunt nemo debitis quisquam hic atque aut? Ducimus alias placeat optio
-              accusamus repudiandae quis ab ex exercitationem rem?
+              {{ user.profile.bio }}
             </p>
           </div>
         </div>

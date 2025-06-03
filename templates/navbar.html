@@ -24,9 +24,13 @@
        <div class="header__user">
          <a href="{% url 'user-profile' request.user.username %}">
            <div class="avatar avatar--medium active">
-             <img src="{% static 'images/avatar.svg' %}" />
+            {% if profile_logged_in.profile_picture %}
+            <img src="{{ profile_logged_in.profile_picture.url }}" alt="image">
+        {% else %}
+            <img src="{% static 'images/default.svg' %}" alt="default image">
+        {% endif %}
            </div>
-           <p>{{ request.user.username }} <span>@{{request.user.username}}</span></p>
+           <p>{{ request.user.profile.first_name }} {{ request.user.profile.last_name }}<span>@{{request.user.username}}</span></p>
          </a>
          <button class="dropdown-button">
            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
@@ -39,7 +43,9 @@
        
         <!-- Not Logged In -->
         <a href="{% url 'login' %}">
-         <img src="{% static 'images/avatar.svg' %}" />
+          
+          <img src="{% static 'images/default.svg' %}" alt="default image">
+      
          <p>Login</p>
        </a>
         {% endif %}

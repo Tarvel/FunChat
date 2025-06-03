@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from .models import Room, Topic, User, Message
-from .forms import RoomForm, UserForm
+from .models import Room, Topic, User, Message, Profile
+from .forms import RoomForm, UserForm, ProfileForm
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -18,11 +18,11 @@ def loginPage(request):
         password = request.POST.get('password')
 
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(username=username.lower())
         except:    
             messages.error(request, "Username does not exist.")
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=username.lower(), password=password)
         if user is not None:
             login(request, user)
             return redirect('home')
@@ -48,10 +48,35 @@ def registerUser(request):
             login(request, user)
             return redirect('home')
         else:
-            messages.error(request, 'An error occured during registration')
-    
+                print(form)
+                messages.error(request, 'An error occured during registration')
+             
     context = {'page':page, 'title':'Register', 'form':form}
     return render (request, 'base/register_login_form.html', context)
+
+
+@login_required(login_url='login')
+def completeProfile(request):
+    page = 'complete'
+    user = request.user
+    profile, created = Profile.objects.get_or_create(user=request.user)
+
+    user_form = UserForm(instance=user)
+    profile_form = ProfileForm(instance=profile)
+
+    if request.method == 'POST':
+        profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
+        user_form = UserForm(request.POST, instance=user)
+
+        if profile_form.is_valid() and user_form.is_valid():
+            user_form.save()
+            profile_form.save()
+
+            return redirect('home')
+
+    context = {'title':"Complete your profile", 'profile_form':profile_form, 'user_form':user_form, 'page':page }
+    return render (request,'base/update_profile.html', context)
+    
 
 
 def home(request):
@@ -60,10 +85,19 @@ def home(request):
     rooms = Room.objects.filter(Q(topic__name__icontains=q)|
                                 Q(name__icontains=q)|
                                 Q(description__icontains=q)) 
-    topics = Topic.objects.all()
+    topics = Topic.objects.all()[0:5]
+    if request.user.is_authenticated:
+        profile_logged_in = Profile.objects.filter(user=request.user).first()
+    else:
+        profile_logged_in=False
+    
     room_count = rooms.count()
-    room_messages = Message.objects.filter(Q(room__topic__name__icontains=q))
-    context = {'title':'FunChat', 'rooms':rooms, 'topics':topics, 'room_count':room_count, 'room_messages':room_messages}
+    room_messages = Message.objects.filter(Q(room__topic__name__icontains=q))[0:5]
+    context = {'title':'FunChat', 'rooms':rooms, 
+               'topics':topics, 'room_count':room_count, 
+               'room_messages':room_messages, 
+               'profile_logged_in':profile_logged_in,
+               }
     return render(request, 'base/home.html', context)
 
 
@@ -83,9 +117,14 @@ def room(request, pk):
         )
         room.participants.add(request.user)
         return redirect('room', pk=room.id)
+    
+    if request.user.is_authenticated:
+        profile_logged_in = Profile.objects.filter(user=request.user).first()
+    else:
+        profile_logged_in=False
         
     
-    context = {'title':room.name, 'room':room, 'room_messages':room_messages, 'participants':participants}
+    context = {'title':room.name, 'room':room, 'room_messages':room_messages, 'participants':participants, 'profile_logged_in':profile_logged_in}
     return render(request, 'base/room.html', context)
 
 
@@ -97,10 +136,19 @@ def userProfile(request, username):
     
     rooms = user.room_set.all()
     topics = Topic.objects.all()
-    room_messages = user.message_set.all()
+    profile = Profile.objects.filter(user=user).first()
+    room_messages = user.message_set.all()[0:5]
+    if request.user.is_authenticated:
+        profile_logged_in = Profile.objects.filter(user=request.user).first()
+    else:
+        profile_logged_in=False
 
     context = {'user':user, 'title':f'{user.username}\'s profile', 
-               'rooms':rooms, 'topics':topics, 'room_messages':room_messages}
+               'rooms':rooms, 'topics':topics, 
+               'room_messages':room_messages,
+               'profile':profile,
+               'profile_logged_in':profile_logged_in
+               }
     return render(request, 'base/profile.html', context)
 
 
@@ -177,19 +225,38 @@ def deleteMessage(request, pk):
 
 @login_required(login_url='login')
 def updateUser(request):
+    page = 'update'
 
     user = request.user
-    form = UserForm(instance=user)
+    profile = user.profile
+
+    if profile == 'None':
+        profile = Profile.objects.create(user=user)
+
+    user_form = UserForm(instance=user)
+    profile_form = ProfileForm(instance=profile)
 
     if request.method == 'POST':
-        form = UserForm(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-            return redirect('user-profile', user.username)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
+        user_form = UserForm(request.POST, instance=user)
+
+        if profile_form.is_valid() and user_form.is_valid():
+            user_form.save()
+            profile_form.save()
 
 
-    context = {'title':'Edit Profile', 'form':form}
+    context = {'title':'Edit Profile', 'page':page, 'profile_form':profile_form, 'user_form':user_form,}
     return render (request, 'base/update_profile.html', context)
 
+def topicsPage(request):
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
 
+    topics = Topic.objects.filter(name__icontains=q)
+    context = {'title':'Topics', 'topics':topics}
+    return render(request, 'base/topics.html', context)
 
+def activityPage(request):
+    room_messages = Message.objects.all()[0:3]
+
+    context = {'title':'Recevt Activities', 'room_messages':room_messages}
+    return render(request, 'base/activity.html', context)

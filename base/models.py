@@ -1,5 +1,27 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+
+def validate_img(file):
+    valid_extensions = ('.jpg', '.jpeg', '.png', '.svg')
+    if not file.name.lower().endswith(valid_extensions):
+        raise ValidationError('Unsupported file extension. Use .jpg, .jpeg, .png or .svg')
+
+    
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    first_name = models.CharField(max_length=200, verbose_name='First name', null=False)
+    last_name = models.CharField(max_length=200, verbose_name='Last name', null=False)
+    bio = models.TextField(blank=True)
+    profile_picture = models.ImageField(upload_to='profile_images/',
+                                        default='profile_images/default.svg',
+                                        blank=True,
+                                        null=True, 
+                                        validators=[validate_img])
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
 
 class Topic(models.Model):
     name = models.CharField(max_length=200)

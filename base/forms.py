@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Room, User
+from .models import Room, User, Profile
 
 class RoomForm(ModelForm):
     class Meta:
@@ -10,4 +10,9 @@ class RoomForm(ModelForm):
 class UserForm(ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email']
+        fields = ['username', 'email', 'first_name']
+
+class ProfileForm(ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['first_name', 'last_name', 'bio', 'profile_picture']
