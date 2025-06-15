@@ -14,7 +14,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = False
 
 
-ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app"]
+ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app", ".now.sh"]
 
 
 INSTALLED_APPS = [
