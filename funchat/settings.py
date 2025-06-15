@@ -85,10 +85,9 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "ui/static")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]  # ✅ matches actual folder
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")    # ✅ matches what Vercel expects
 STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "ui/staticfiles")
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
