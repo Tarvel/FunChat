@@ -2,7 +2,11 @@
 
 # Build the project
 echo "Building the project..."
-python3 -m pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+
+echo "Python version:"
+python --version
 
 echo "Collect Static..."
 python manage.py collectstatic --noinput --clear
