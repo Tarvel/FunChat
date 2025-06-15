@@ -26,11 +26,25 @@
               <div class="form__group form__group">
                 <label for="username">Username</label>
               <input type="text" name="username" placeholder="Enter Username">
+              {% if messages %}
+              {% for message in messages %}
+              {% if "username" in message.message %}
+              <span class="eror">{{ message }}</span>
+              {% endif %}
+              {% endfor %}
+              {% endif %}
               </div>
 
               <div class="form__group">
-                <label for="password">Password</label>
-        <input type="password" name="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"/>       
+              <label for="password">Password</label>
+              <input type="password" name="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"/>
+              {% if messages %}
+              {% for message in messages %}
+              {% if "password" in message.message %}
+              <span class="eror">{{ message }}</span>
+              {% endif %}
+              {% endfor %}
+              {% endif %}     
               </div>
 
               <button class="btn btn--main" type="submit">
@@ -69,7 +83,11 @@
                     <div class="form__group form__group">
                       <label for="{{field.label}}">{{ field.label}}</label>
                     {{field}}
+                    {% if field.errors %}
+                        <span class="eror" >{{ field.errors|join:", " }}</span>
+                    {% endif %}
                     </div>
+                    
                     {% endfor %}
                     
                     <button class="btn btn--main" type="submit">

@@ -26,7 +26,7 @@
             </div>
           </div>
           <div class="profile__info">
-            <h3>{{user.username}}</h3>
+            <h3>{{ user.profile.first_name }} {{ user.profile.last_name }}</h3>
             <p>@{{user.username}}</p>
 
             {% if request.user.username ==  user.username %}

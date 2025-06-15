@@ -3,10 +3,9 @@
 __pycache__/
 db.sqlite3
 *.log
-/media
 venv/
 .venv/
 *.swp
-local_settings.py
-settings.py
 *.sqlite3
+*_anc.html
+.env

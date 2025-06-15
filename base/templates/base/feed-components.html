@@ -6,8 +6,8 @@
           <div class="roomListRoom__header">
             <a href="{% url 'user-profile' room.host.username %}" class="roomListRoom__author">
               <div class="avatar avatar--small">
-                {% if profile.profile_picture %}
-      <img src="{{ profile.profile_picture.url }}" alt="Profile Picture">
+                {% if room.host.profile.profile_picture %}
+      <img src="{{ room.host.profile.profile_picture.url }}" alt="Profile Picture">
   {% else %}
       <img src="{% static 'images/default.svg' %}" alt="default image">
   {% endif %}
@@ -46,4 +46,22 @@
           </div>
         </div>
         {% endfor %}
+        <div class="pagination-container mt-8 flex justify-center">
+    <nav class="flex items-center space-x-4 border border-gray-300 rounded-lg px-4 py-2 bg-white shadow-sm text-sm">
+        {% if rooms.has_previous %}
+            <a href="{% url 'home' %}?page={{ rooms.previous_page_number }}"
+               class="px-3 py-1 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-700">Previous</a>
+        {% endif %}
+        
+        <span class="px-3 py-1 text-gray-600">
+            Page <strong>{{ rooms.number }}</strong> of <strong>{{ rooms.paginator.num_pages }}</strong>
+        </span>
+        
+        {% if rooms.has_next %}
+            <a href="{% url 'home' %}?page={{ rooms.next_page_number }}"
+               class="px-3 py-1 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-700">Next</a>
+        {% endif %}
+    </nav>
+</div>
+
       

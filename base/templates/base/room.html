@@ -70,8 +70,8 @@
                 <p>Hosted By</p>
                 <a href="{% url 'user-profile' room.host %}" class="room__author">
                   <div class="avatar avatar--small">
-                    {% if profile.image %}
-    <img src="{{ profile.image.url }}" alt="image">
+                    {% if room.host.profile.profile_picture %}
+    <img src="{{ room.host.profile.profile_picture.url }}" alt="image">
 {% else %}
     <img src="{% static 'images/default.svg' %}" alt="default image">
 {% endif %}
@@ -93,8 +93,8 @@
                     <div class="thread__author">
                       <a href="{% url 'user-profile' message.user.username %}" class="thread__authorInfo">
                         <div class="avatar avatar--small">
-                          {% if profile.image %}
-    <img src="{{ profile.image.url }}" alt="image">
+                          {% if message.user.profile.profile_picture %}
+    <img src="{{ message.user.profile.profile_picture.url }}" alt="image">
 {% else %}
     <img src="{% static 'images/default.svg' %}" alt="default image">
 {% endif %}
@@ -141,8 +141,8 @@
             {% for user in participants  %}
             <a href="{% url 'user-profile' user.username %}" class="participant">
               <div class="avatar avatar--medium">
-                {% if profile.image %}
-    <img src="{{ profile.image.url }}" alt="image">
+                {% if user.profile.profile_picture %}
+    <img src="{{ user.profile.profile_picture.url }}" alt="image">
 {% else %}
     <img src="{% static 'images/default.svg' %}" alt="default image">
 {% endif %}

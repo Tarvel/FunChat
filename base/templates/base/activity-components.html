@@ -9,16 +9,31 @@
               <div class="activities__boxHeader roomListRoom__header">
                 <a href="{% url 'user-profile' message.user.username %}" class="roomListRoom__author">
                   
+                {% if request.user == message.user %}
 
                     <div class="avatar avatar--small">
-                      
-                      {% if profile.profile_picture %}
-                      <img src="{{ profile.profile_picture.url }}" alt="Profile Picture">
-                  {% else %}
-                      <img src="{% static 'images/default.svg' %}" alt="default image">
-                  {% endif %}
+ 
+                      {% if message.user.profile.profile_picture %}
+    <img src="{{ message.user.profile.profile_picture.url }}" alt="image">
+{% else %}
+    <img src="{% static 'images/default.svg' %}" alt="default image">
+{% endif %}
                   
                   </div>
+
+                  {% else %}
+
+                  <div class="avatar avatar--small">
+                    {% if message.user.profile.profile_picture %}
+                    <img src="{{ message.user.profile.profile_picture.url }}" alt="image">
+                {% else %}
+                    <img src="{% static 'images/default.svg' %}" alt="default image">
+                {% endif %}
+                  </div>
+
+
+                  {% endif %}
+
                   <p>
                     @{{ message.user.username }}
                     <span>{{ message.created|timesince }} ago</span>
