@@ -6,11 +6,7 @@
           <div class="roomListRoom__header">
             <a href="{% url 'user-profile' room.host.username %}" class="roomListRoom__author">
               <div class="avatar avatar--small">
-                {% if room.host.profile.profile_picture %}
-      <img src="{{ room.host.profile.profile_picture.url }}" alt="Profile Picture">
-  {% else %}
-      <img src="{% static 'images/default.svg' %}" alt="default image">
-  {% endif %}
+                 <img src="{% static 'images/default.svg' %}" alt="default image">
               </div>
               
               <span>@{{ room.host.username }}</span>

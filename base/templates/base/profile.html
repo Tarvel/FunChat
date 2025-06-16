@@ -17,12 +17,8 @@
       <div class="roomList">
         <div class="profile">
           <div class="profile__avatar">
-            <div class="avatar avatar--large active">
-  {% if profile.profile_picture %}
-      <img src="{{ profile.profile_picture.url }}" alt="Profile Picture">
-  {% else %}
-      <img src="{% static 'images/default.svg' %}" alt="default image">
-  {% endif %}
+            <div class="avatar avatar--large active"> 
+              <img src="{% static 'images/default.svg' %}" alt="default image">
             </div>
           </div>
           <div class="profile__info">

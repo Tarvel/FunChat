@@ -13,11 +13,7 @@
 
                     <div class="avatar avatar--small">
  
-                      {% if message.user.profile.profile_picture %}
-    <img src="{{ message.user.profile.profile_picture.url }}" alt="image">
-{% else %}
-    <img src="{% static 'images/default.svg' %}" alt="default image">
-{% endif %}
+                       <img src="{% static 'images/default.svg' %}" alt="default image">
                   
                   </div>
 
